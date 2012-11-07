@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>PlaceHolder</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="../../build/build.css">
+		<style>
+			#issuesDisplayer {
+				min-height: 200px;
+			}
+			#issuesDisplayer, #loading {
+				background: #ddd;
+			}
+			.issue .body {
+				white-space: pre-wrap;
+			}
+			.issue .title {
+				position: relative;
+			}
+			.issue .icon {
+				position: relative;
+				left: -0.35em;
+				top: 0.35em;
+			}
+		</style>
+  </head>
+  <body>
+		<div id="container" class="container"></div>
+    <script src="../../build/build.js"></script>
+    <script>
+			var request = require('visionmedia-superagent/lib/client.js')
+      var PlaceHolder = require('placeholder')
+			var domify = require('component-domify')
+			var loading = domify('<div id="loading">Loading...</div>')
+			var issuesView = {
+				el: domify('<div id="issuesDisplayer" class="span6 offset4"></div>'),
+				issueTemplate: function(title, body) {
+					return domify([
+						'<div class="issue">',
+							'<h3 class="title"><i class="icon icon-arrow-right"></i>'+title+'</h3>',
+							'<div class="body well well-large">'+body+'</body>',
+						'</div>'
+					].join(''))
+					//return domify('<span class="body">'+body+'</div>')
+				},
+				add: function(issue) {
+					this.el.appendChild(this.issueTemplate(issue.title, issue.body))
+				}
+			}
+			var placeholder = PlaceHolder(loading).hold(issuesView.el)
+
+			request
+				.get('https://api.github.com/repos/component/component/issues')
+				.set('Accept', 'application/json')
+				.end(function(res) {
+					if (!res.ok) {
+						console.error('omg')
+					}
+					res.body.forEach(issuesView.add.bind(issuesView))
+					placeholder.show()
+					setTimeout(function() {
+						placeholder.hold()
+					}, 3000)
+				})
+
+				document.getElementById('container').appendChild(placeholder.el)
+    </script>
+  </body>
+</html>

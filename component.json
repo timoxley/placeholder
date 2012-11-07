@@ -1,0 +1,20 @@
+{
+  "name": "placeholder",
+  "repo": "timoxley/placeholder",
+  "description": "Display placeholder content while data is loading.",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "godmodelabs/spinner": "*",
+    "component/inserted": "*",
+    "timoxley/overlay": "*"
+  },
+  "development": {
+    "component/domify": "*",
+    "visionmedia/superagent": "*"
+  },
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}
